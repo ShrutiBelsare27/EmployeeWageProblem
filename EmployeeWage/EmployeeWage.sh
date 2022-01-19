@@ -1,39 +1,38 @@
-#!/bin/bash -x
-isPresent=1;
-isPartTime=0;
-isFullTime=1;
+#!/bin/bash
 empRatePerHr=20;
-numWorkingDay=20
-totalDays=31
+maxHrInMonth=100;
+numWorkingDay=20;
+total_working_hrs=0;
+total_working_days=0;
 check_attend=$(( $RANDOM % 2));
 case $check_attend in
 0)echo Employee is present;
-       for (( day=1;day<=numWorkingDay;day++ )) 
-       do
+        while [[ $total_working_hrs -lt $maxHrInMonth && $total_working_days -lt  $numWorkingDay ]]
+	do
+	(( total_working_days++ ))
 	work=$(($RANDOM%2))
 	case $work in
 	0)empHrs=8;
-	echo "Day" $day " FullTime"
-    	FullTime=$(($FullTime+1))
- 	wage_per_day=$(($empHrs*$empRatePerHr));
-        echo "wage per day is: $wage_per_day"
-	wagePerMonth=$(($wage_per_day*$FullTime));
+      	total_working_hrs=$(($total_working_hrs + $empHrs))
+        daily_wage=$(( empHrs* empRatePerHr ))
+	total_wage=$(($total_working_hrs*$empRatePerHr));
+	echo "Total Daily wage is $daily_wage"
+	echo "The full time  employee for the month is $total_wage"
 	;;
 	1)
 	empHrs=4;
-	echo "Day" $day " partTime"
-    	partTime=$(($partTime+1))
-	wage_per_day=$(($empHrs*$empRatePerHr));
-	echo "wage per day  is : $wage_per_day"
-	wagePerMonth1=$(($wage_per_day*$partTime));
-     	;;
- 	esac
-	done       
-       totalSalary=$(($wagePerMonth+$wagePerMonth1))
-	echo "Total salary "$totalSalary
-;;
-
+	total_working_hrs=$(($total_working_hrs + $empHrs))
+	daily_wage=$(( empHrs* empRatePerHr ))
+        total_wage=$(($total_working_hrs*$empRatePerHr));
+        echo "Total Daily wage is $daily_wage"
+	echo "The part time employee for the month is $total_wage"
+	;;
+	esac       
+     
+      done
+      echo $total_working_hrs;
+      echo  $total_working_days;
+       ;;
 1)
-
-echo employee is absent;;
+echo emp is absent;;
 esac
